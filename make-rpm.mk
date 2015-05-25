@@ -17,6 +17,8 @@ initrddir=$(DESTDIR)$(shell rpm --eval %{_initrddir})
 sysconfdir:=$(DESTDIR)$(shell rpm --eval %{_sysconfdir})
 pythonsitedir:=$(DESTDIR)$(shell python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
 DISTTAG=$(shell rpm --eval '%{dist}' | tr -d '.')
+SRPMDIR=$(shell rpm --eval '%{_srcrpmdir}')
+TARGETS='6 7'
 
 # takes the content of current working directory and packs it to tgz
 define do-distcwd
@@ -36,10 +38,14 @@ distcwd:
 rpm: distcwd
 	rpmbuild --define "VERSION $(VERSION)" -ta $(WORKDIR)/$(PKGNAME).tgz
 
-# RPMs for all distributions - TBD
-rpmscwd: distcwd
+srpm: distcwd
 	rpmbuild -ts ${WORKDIR}/$(PKGNAME).tgz
-	mock 	
+
+# RPMs for all distributions - TBD
+rpmscwd: srpm
+	for target in TARGETS; do \
+	    mock --rebuild -r epel-$(TARGET)-x86_64 $(SRPMDIR)/*.src.rpm \
+	done
 
 upload: rpm
 	$(do-upload)
