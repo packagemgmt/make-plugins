@@ -44,7 +44,7 @@ srpm: distcwd
 # RPMs for all distributions - TBD
 rpmscwd: srpm
 	for target in TARGETS; do \
-	    mock --rebuild -r epel-$(TARGET)-x86_64 $(SRPMDIR)/*.src.rpm \
+	    mock --rebuild -r epel-$(TARGET)-x86_64 $(SRPMDIR)/*.src.rpm; \
 	done
 
 upload: rpm
