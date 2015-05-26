@@ -44,10 +44,26 @@ srpm: distcwd
 
 # RPMs for all distributions - TBD
 rpms: srpm
-	$(foreach os_version,$(OS_VERSIONS),mock --define "dist .el$(os_version)" --define "VERSION $(VERSION)" --rebuild -r epel-$(os_version)-x86_64 $(SRPMDIR)/*.src.rpm;)
+	$(foreach os_version, $(OS_VERSIONS), \
+	    mock \
+	      --define "dist .el$(os_version)" \
+	      --define "VERSION $(VERSION)" \
+	      --rebuild \
+	      -r epel-$(os_version)-x86_64 \
+	      $(SRPMDIR)/*.src.rpm; \
+	)
 
 upload: rpm
 	$(do-upload)
+
+uploadrpms: rpms
+	$(foreach os_version, $(OS_VERSIONS), \
+	    artifact upload \
+	      $(UPLOAD_OPTIONS) \
+	      /var/lib/mock/epel-$(os_version)-x86_64/result/$(PKGNAME)-$(VERSION)-$(RELEASE).$(BUILDARCH).rpm \
+	      packages-el$(os_version) \
+	      $(GROUP); \
+	)
 
 changelog:
 	git log --pretty=format:"%d%n    * %s [%an, %ad]"  --date=short
@@ -55,3 +71,5 @@ changelog:
 installChangelog:
 	mkdir -p $(defaultdocdir)/$(PKGNAME)-$(VERSION)
 	install -m 644 ChangeLog $(defaultdocdir)/$(PKGNAME)-$(VERSION)
+
+.PHONY: distcwd rpm srpm rpms upload uploadrpms changelog installChangelog
