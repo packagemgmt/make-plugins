@@ -1,6 +1,6 @@
 PKGNAME=$(shell basename *.spec .spec)
 VERSION?=0.0.0# assign zeros only if not specified from cmdline by make {target} VERSION=1.2.3
-GROUP?=com.example # used when uploading to artifact repository
+GROUP?=com.example# used when uploading to artifact repository
 WORKDIR:=/tmp/
 RELEASE=$(shell grep -oP '(?<=^Release: ).*' $(PKGNAME).spec | xargs rpm --eval)
 BUILDARCH=$(shell grep -oP '(?<=^BuildArch: ).*' $(PKGNAME).spec)
@@ -18,7 +18,7 @@ sysconfdir:=$(DESTDIR)$(shell rpm --eval %{_sysconfdir})
 pythonsitedir:=$(DESTDIR)$(shell python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
 DISTTAG=$(shell rpm --eval '%{dist}' | tr -d '.')
 SRPMDIR=$(shell rpm --eval '%{_srcrpmdir}')
-TARGETS='6 7'
+TARGETS = 6 7
 
 # takes the content of current working directory and packs it to tgz
 define do-distcwd
@@ -39,13 +39,12 @@ rpm: distcwd
 	rpmbuild --define "VERSION $(VERSION)" -ta $(WORKDIR)/$(PKGNAME).tgz
 
 srpm: distcwd
-	rpmbuild -ts ${WORKDIR}/$(PKGNAME).tgz
+	rpmdev-wipetree
+	rpmbuild --define "VERSION $(VERSION)" -ts ${WORKDIR}/$(PKGNAME).tgz
 
 # RPMs for all distributions - TBD
-rpmscwd: srpm
-	for target in TARGETS; do \
-	    mock --rebuild -r epel-$(TARGET)-x86_64 $(SRPMDIR)/*.src.rpm; \
-	done
+rpms: srpm
+	$(foreach version,$(TARGETS),mock --define "VERSION $(VERSION)" --rebuild -r epel-$(version)-x86_64 $(SRPMDIR)/*.src.rpm;)
 
 upload: rpm
 	$(do-upload)
