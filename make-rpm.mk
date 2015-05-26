@@ -18,7 +18,7 @@ sysconfdir:=$(DESTDIR)$(shell rpm --eval %{_sysconfdir})
 pythonsitedir:=$(DESTDIR)$(shell python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
 DISTTAG=$(shell rpm --eval '%{dist}' | tr -d '.')
 SRPMDIR=$(shell rpm --eval '%{_srcrpmdir}')
-TARGETS = 6 7
+OS_VERSIONS = 6 7
 
 # takes the content of current working directory and packs it to tgz
 define do-distcwd
@@ -44,7 +44,7 @@ srpm: distcwd
 
 # RPMs for all distributions - TBD
 rpms: srpm
-	$(foreach version,$(TARGETS),mock --define "VERSION $(VERSION)" --rebuild -r epel-$(version)-x86_64 $(SRPMDIR)/*.src.rpm;)
+	$(foreach os_version,$(OS_VERSIONS),mock --define "dist .el$(os_version)" --define "VERSION $(VERSION)" --rebuild -r epel-$(os_version)-x86_64 $(SRPMDIR)/*.src.rpm;)
 
 upload: rpm
 	$(do-upload)
