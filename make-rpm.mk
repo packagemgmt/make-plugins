@@ -32,7 +32,7 @@ define do-distcwd
 	tar cvzf $(WORKDIR)/$(PKGNAME).tgz --transform "s,^\.,$(PKGNAME)-$(VERSION)," .
 endef
 
---- TARGETS ---
+# --- TARGETS ---
 distcwd:
 	$(do-distcwd)
 
