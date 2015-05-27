@@ -36,6 +36,7 @@ endef
 distcwd:
 	$(do-distcwd)
 
+# Builds RPM package only for your OS version. Much faster than make rpms, good for basic testing of your spec/makefile
 rpm: distcwd
 	rpmbuild --define "VERSION $(VERSION)" -ta $(WORKDIR)/$(PKGNAME).tgz
 
@@ -43,7 +44,7 @@ srpm: distcwd
 	rpmdev-wipetree
 	rpmbuild --define "VERSION $(VERSION)" -ts ${WORKDIR}/$(PKGNAME).tgz
 
-# Build RPMs for all os versions
+# Build RPMs for all os versions defined on OS_VERIONS
 rpms: srpm
 	$(foreach os_version, $(OS_VERSIONS), \
 	    mock \
