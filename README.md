@@ -1,25 +1,34 @@
 How to incorporate it
 ---------------------
 
-Add these lines to your Makefile so you can use this plugin
+1. Add these lines to your Makefile so you can use this plugin
 ```
-all:
+mkplugin:
         curl -k https://raw.githubusercontent.com/stardust85/make-plugins/master/make-rpm.mk > make-rpm.mk
 
 -include make-rpm.mk
 ```
+
+2. Then call 'make mkplugin' to download it.
+3. (if you like it) git add mkplugin.mk && git commit mkplugin.mk && git push 
+
 
 Some examples what it can do:
 -----------------------------
 
 Create rpm from content in current working directory
 ```
-make rpmcwd
+make rpm
 ```
 
 Override version mentioned in specfile - good for continuous integration
 ```
-make rpmcwd VERSION=1.2.3
+make rpm VERSION=1.2.3
+```
+
+Create RPMs for all os versions (el6, el7)
+```
+make rpms
 ```
 
 Upload to artifact repository. This will also build the rpm before.
