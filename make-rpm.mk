@@ -49,6 +49,7 @@ srpm: distcwd
 rpms: srpm
 	$(foreach os_version, $(OS_VERSIONS), \
 	    mkdir -p $(RESULTDIR)/$(os_version) && \
+	    rm -rf $(RESULTDIR)/$(os_version)/* && \
 	    /usr/bin/mock \
 	      --resultdir $(RESULTDIR)/$(os_version) \
 	      --define "dist .el$(os_version)" \
