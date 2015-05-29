@@ -47,7 +47,7 @@ srpm: distcwd
 # Build RPMs for all os versions defined on OS_VERIONS
 rpms: srpm
 	$(foreach os_version, $(OS_VERSIONS), \
-	    mock \
+	    /usr/bin/mock \
 	      --define "dist .el$(os_version)" \
 	      --define "VERSION $(VERSION)" \
 	      --rebuild \
