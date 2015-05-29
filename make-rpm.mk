@@ -19,6 +19,7 @@ sysconfdir:=$(DESTDIR)$(shell rpm --eval %{_sysconfdir})
 pythonsitedir:=$(DESTDIR)$(shell python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
 SRPMDIR=$(shell rpm --eval '%{_srcrpmdir}')
 OS_VERSIONS = 6 7
+RESULTDIR = .
 
 # --- Deprecated variables ---
 DISTTAG=$(shell rpm --eval '%{dist}' | tr -d '.')
@@ -47,7 +48,9 @@ srpm: distcwd
 # Build RPMs for all os versions defined on OS_VERIONS
 rpms: srpm
 	$(foreach os_version, $(OS_VERSIONS), \
+	    mkdir -p $(RESULTDIR)/$(os_version) && \
 	    /usr/bin/mock \
+	      --resultdir $(RESULTDIR)/$(os_version) \
 	      --define "dist .el$(os_version)" \
 	      --define "VERSION $(VERSION)" \
 	      --rebuild \
@@ -61,7 +64,7 @@ uploadrpms: rpms
 	$(foreach os_version, $(OS_VERSIONS), \
 	    artifact upload \
 	      $(UPLOAD_OPTIONS) \
-	      /var/lib/mock/epel-$(os_version)-x86_64/result/$(PKGNAME)-$(VERSION)-$(RELEASE).$(BUILDARCH).rpm \
+	      $(RESULTDIR)/$(os_version)/$(PKGNAME)-$(VERSION)-$(RELEASE).$(BUILDARCH).rpm \
 	      packages-el$(os_version) \
 	      $(GROUP); \
 	)
