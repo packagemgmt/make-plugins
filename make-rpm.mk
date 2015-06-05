@@ -19,7 +19,7 @@ sysconfdir:=$(DESTDIR)$(shell rpm --eval %{_sysconfdir})
 pythonsitedir:=$(DESTDIR)$(shell python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
 SRPMDIR=$(shell rpm --eval '%{_srcrpmdir}')
 OS_VERSIONS = 6 7
-RESULTDIR = .
+RESULTDIR = $(PWD)
 
 # --- Deprecated variables ---
 DISTTAG=$(shell rpm --eval '%{dist}' | tr -d '.')
