@@ -22,7 +22,7 @@ OS_VERSIONS = 5 6 7
 RESULTDIR = $(PWD)
 
 # --- Deprecated variables ---
-DISTTAG=$(shell rpm --eval '%{dist}' | tr -d '.')
+DISTTAG?=$(shell rpm --eval '%{dist}' | tr -d '.')
 
 # --- Helper functions ---
 # They are functions so they can be overrided
