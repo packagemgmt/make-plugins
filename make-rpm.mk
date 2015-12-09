@@ -56,6 +56,7 @@ rpms: srpm
 	      --define "VERSION $(VERSION)" \
 	      --rebuild \
 	      -r epel-$(os_version)-x86_64 $(MOCKOPTIONS) \
+	      --no-cleanup-after \
 	      $(SRPMDIR)/*.src.rpm; \
 	)
 
