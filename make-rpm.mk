@@ -55,7 +55,7 @@ rpms: srpm
 	      --define "dist .el$(os_version)" \
 	      --define "VERSION $(VERSION)" \
 	      --rebuild \
-	      -r epel-$(os_version)-x86_64 \
+	      -r epel-$(os_version)-x86_64 $(MOCKOPTIONS) \
 	      $(SRPMDIR)/*.src.rpm; \
 	)
 
