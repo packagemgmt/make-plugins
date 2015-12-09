@@ -18,7 +18,7 @@ initrddir=$(DESTDIR)$(shell rpm --eval %{_initrddir})
 sysconfdir:=$(DESTDIR)$(shell rpm --eval %{_sysconfdir})
 pythonsitedir:=$(DESTDIR)$(shell python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
 SRPMDIR=$(shell rpm --eval '%{_srcrpmdir}')
-OS_VERSIONS = 5 6 7
+OS_VERSIONS?=5 6 7
 RESULTDIR = $(PWD)
 
 # --- Deprecated variables ---
