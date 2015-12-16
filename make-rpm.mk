@@ -21,6 +21,8 @@ SRPMDIR=$(shell rpm --eval '%{_srcrpmdir}')
 OS_VERSIONS?=5 6 7
 RESULTDIR = $(PWD)
 
+ON_PREPARE_CMD ?= echo No prepare cmd. Lucky you.
+
 # --- Deprecated variables ---
 DISTTAG?=$(shell rpm --eval '%{dist}' | tr -d '.')
 
@@ -46,16 +48,26 @@ srpm: distcwd
 	rpmbuild --define "VERSION $(VERSION)" -ts ${WORKDIR}/$(PKGNAME).tgz
 
 # Build RPMs for all os versions defined on OS_VERIONS
+# we use three phases (init, chroot, rebuild) to allow user to modify the chrooted system as needed
 rpms: srpm
 	$(foreach os_version, $(OS_VERSIONS), \
 	    mkdir -p $(RESULTDIR)/$(os_version) && \
 	    rm -rf $(RESULTDIR)/$(os_version)/* && \
 	    /usr/bin/mock \
 	      --resultdir $(RESULTDIR)/$(os_version) \
+	      --init \
+	      -r epel-$(os_version)-x86_64 && \
+	    /usr/bin/mock \
+	      --resultdir $(RESULTDIR)/$(os_version) \
+	      -r epel-$(os_version)-x86_64 \
+	      --chroot $(ON_PREPARE_CMD) && \
+	    /usr/bin/mock \
+	      --resultdir $(RESULTDIR)/$(os_version) \
 	      --define "dist .el$(os_version)" \
 	      --define "VERSION $(VERSION)" \
 	      --rebuild \
 	      -r epel-$(os_version)-x86_64 $(MOCKOPTIONS) \
+	      --no-clean \
 	      --no-cleanup-after \
 	      $(SRPMDIR)/*.src.rpm; \
 	)
