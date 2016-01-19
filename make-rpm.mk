@@ -1,6 +1,11 @@
 # --- Variables ---
 PKGNAME=$(shell basename *.spec .spec)
-VERSION?=0.0.0# assign zeros only if not specified from cmdline by make {target} VERSION=1.2.3
+
+VERSION_MAJOR ?= 0
+VERSION_MINOR ?= 0
+VERSION_BUGFIX ?= 0
+
+VERSION?=$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_BUGFIX)   # assign zeros only if not specified from cmdline by make {target} VERSION=1.2.3
 GROUP?=com.example# used when uploading to artifact repository
 WORKDIR:=/tmp/
 RELEASE=$(shell grep -oP '(?<=^Release: ).*' $(PKGNAME).spec | xargs rpm --eval)
