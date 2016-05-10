@@ -38,7 +38,7 @@ DISTTAG?=$(shell rpm --eval '%{dist}' | tr -d '.')
 define do-distcwd
 	# make --no-print-directory -s changelog | grep -v '^$$' > ChangeLog
 	rm -f $(WORKDIR)/$(PKGNAME).tgz
-	tar cvzf $(WORKDIR)/$(PKGNAME).tgz --transform "s,^\.,$(PKGNAME)-$(VERSION)," .
+	tar cvzf $(WORKDIR)/$(PKGNAME).tgz --transform "s,^\.,$(PKGNAME)-$(VERSION)," . || :
 endef
 
 # --- TARGETS ---
@@ -82,11 +82,15 @@ rpms: srpm
 # Upload RPMs for all os versions to Sonatype Nexus
 # Requires package repository-tools
 uploadrpms: rpms
+	is_snapshot = $(shell echo $(VERSION) | egrep -o '-SNAPSHOT$')
+	$(if $(is_snapshot), REPO_SUFFIX='-snapshots')
+
+
 	$(foreach os_version, $(OS_VERSIONS), \
 	    artifact upload \
 	      $(UPLOAD_OPTIONS) \
 	      $(RESULTDIR)/$(os_version)/$(PKGNAME)-$(VERSION)-*.$(BUILDARCH).rpm \
-	      packages-el$(os_version) \
+	      packages-el$(os_version)$(REPO_SUFFIX) \
 	      $(GROUP); \
 	)
 
