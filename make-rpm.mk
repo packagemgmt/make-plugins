@@ -85,7 +85,7 @@ uploadrpms: rpms
 	$(foreach os_version, $(OS_VERSIONS), \
 	    artifact upload \
 	      $(UPLOAD_OPTIONS) \
-	      $(RESULTDIR)/$(os_version)/$(PKGNAME)-$(VERSION)-*.$(BUILDARCH).rpm \
+	      $(RESULTDIR)/$(os_version)/$(PKGNAME)-$(VERSION)-*.rpm \
 	      packages-el$(os_version) \
 	      $(GROUP); \
 	)
