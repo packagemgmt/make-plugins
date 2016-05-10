@@ -9,7 +9,7 @@ VERSION_BUGFIX ?= 0
 VERSION?=$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_BUGFIX)
 GROUP?=com.example# used when uploading to artifact repository
 WORKDIR:=/tmp/
-RELEASE=$(shell grep -oP '(?<=^Release: ).*' $(PKGNAME).spec | xargs rpm --eval)
+RELEASE ?= 1
 BUILDARCH=$(shell grep -oP '(?<=^BuildArch: ).*' $(PKGNAME).spec)
 RPMDIR=$(shell rpm --eval %{_rpmdir})
 prefix=$(DESTDIR)$(shell rpm --eval %{_prefix})
@@ -29,6 +29,12 @@ RESULTDIR = $(PWD)
 
 ON_PREPARE_CMD ?= echo No prepare cmd. Lucky you.
 
+ifeq ($(RELEASE), SNAPSHOT)
+REPO_SUFFIX=-snapshots
+else
+REPO_SUFFIX=
+endif
+
 # --- Deprecated variables ---
 DISTTAG?=$(shell rpm --eval '%{dist}' | tr -d '.')
 
@@ -38,7 +44,7 @@ DISTTAG?=$(shell rpm --eval '%{dist}' | tr -d '.')
 define do-distcwd
 	# make --no-print-directory -s changelog | grep -v '^$$' > ChangeLog
 	rm -f $(WORKDIR)/$(PKGNAME).tgz
-	tar cvzf $(WORKDIR)/$(PKGNAME).tgz --transform "s,^\.,$(PKGNAME)-$(VERSION)," .
+	tar cvzf $(WORKDIR)/$(PKGNAME).tgz --transform "s,^\.,$(PKGNAME)-$(VERSION)," . || :
 endef
 
 # --- TARGETS ---
@@ -52,7 +58,7 @@ rpm: distcwd
 srpm: distcwd
 	rpmdev-wipetree
 	# we need to specify old digest algorithm to support el5
-	rpmbuild --define "_source_filedigest_algorithm md5" --define "VERSION $(VERSION)" -ts ${WORKDIR}/$(PKGNAME).tgz
+	rpmbuild --define "_source_filedigest_algorithm md5" --define "VERSION $(VERSION)" --define "RELEASE $(RELEASE)" -ts ${WORKDIR}/$(PKGNAME).tgz
 
 # Build RPMs for all os versions defined on OS_VERIONS
 # we use three phases (init, chroot, rebuild) to allow user to modify the chrooted system as needed
@@ -72,6 +78,7 @@ rpms: srpm
 	      --resultdir $(RESULTDIR)/$(os_version) \
 	      --define "dist .el$(os_version)" \
 	      --define "VERSION $(VERSION)" \
+	      --define "RELEASE $(RELEASE)" \
 	      --rebuild \
 	      -r epel-$(os_version)-x86_64 $(MOCKOPTIONS) \
 	      --no-clean \
@@ -83,10 +90,10 @@ rpms: srpm
 # Requires package repository-tools
 uploadrpms: rpms
 	$(foreach os_version, $(OS_VERSIONS), \
-	    artifact upload \
+	    artifact upload --artifact $(PKGNAME) --version $(VERSION)-$(RELEASE) \
 	      $(UPLOAD_OPTIONS) \
-	      $(RESULTDIR)/$(os_version)/$(PKGNAME)-$(VERSION)-*.rpm \
-	      packages-el$(os_version) \
+	      $(RESULTDIR)/$(os_version)/$(PKGNAME)-$(VERSION)-*$(BUILDARCH).rpm \
+	      packages-el$(os_version)$(REPO_SUFFIX) \
 	      $(GROUP); \
 	)
 
