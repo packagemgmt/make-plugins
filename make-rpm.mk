@@ -31,6 +31,7 @@ ON_PREPARE_CMD ?= echo No prepare cmd. Lucky you.
 
 ifeq ($(RELEASE), SNAPSHOT)
 REPO_SUFFIX=-snapshots
+UPLOAD_EXTRA_PARAMS=--use-direct-put
 else
 REPO_SUFFIX=
 endif
@@ -90,7 +91,7 @@ rpms: srpm
 # Requires package repository-tools
 uploadrpms: rpms
 	$(foreach os_version, $(OS_VERSIONS), \
-	    artifact upload --artifact $(PKGNAME) --version $(VERSION)-$(RELEASE) \
+	    artifact upload $(UPLOAD_EXTRA_PARAMS) --artifact $(PKGNAME) --version $(VERSION)-$(RELEASE) \
 	      $(UPLOAD_OPTIONS) \
 	      $(RESULTDIR)/$(os_version)/$(PKGNAME)-$(VERSION)-*$(BUILDARCH).rpm \
 	      packages-el$(os_version)$(REPO_SUFFIX) \

@@ -31,12 +31,12 @@ Create RPMs for all os versions (el6, el7)
 make rpms
 ```
 
-Upload to artifact repository. This will also build the rpm before.
-You will need https://github.com/stardust85/repositorytools to make this work
+Upload to artifact repository. This will also build the rpms before.
+You will need https://pypi.python.org/pypi/repositorytools >=4.2.1 to make this work
 ```
 REPOSITORY_URL=https://repository.eng.mycompany.com
 REPOSITORY_USER=jdoe
 REPOSITORY_PASSWORD=mysecretpassword
 
-make upload GROUP=com.mycompany
+make uploadrpms GROUP=com.mycompany
 ```
