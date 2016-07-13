@@ -2,13 +2,11 @@
 
 cp ../make-rpm.mk .
 
-@test "make rpm" {
-	make rpm # test make rpm - this should pass
-}
+cp test_min_el5.spec_ test.spec
 
-@test "fail rpms. Should fail on el5 (missing group)" {
+@test "upload el6" {
 	skip
-	export OS_VERSIONS='5 6'
-	make rpms
+	export OS_VERSIONS='6'
+	make uploadrpms
 }
 

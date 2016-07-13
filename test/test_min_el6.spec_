@@ -13,8 +13,7 @@ BuildArch: noarch
 %setup -q
 
 %install
-%make_install
-
+make install DESTDIR=%{buildroot}
 
 %files
 /usr/bin/helloworld

@@ -64,7 +64,7 @@ distcwd:
 
 # Builds RPM package only for your OS version. Much faster than make rpms, good for basic testing of your spec/makefile
 rpm: distcwd
-	rpmbuild --define "VERSION $(VERSION)" -ta $(WORKDIR)/$(PKGNAME).tgz
+	rpmbuild --define "VERSION $(VERSION)" --define "RELEASE $(RELEASE)" -ta $(WORKDIR)/$(PKGNAME).tgz
 
 srpm: distcwd
 	rpmdev-wipetree
@@ -75,23 +75,23 @@ srpm: distcwd
 # we use three phases (init, chroot, rebuild) to allow user to modify the chrooted system as needed
 rpms: srpm
 	set -e && for os_version in $(OS_VERSIONS); do \
-	    mkdir -p $(RESULTDIR)/${os_version} && \
-	    rm -f $(RESULTDIR)/${os_version}/* && \
+	    mkdir -p $(RESULTDIR)/$${os_version} && \
+	    rm -f $(RESULTDIR)/$${os_version}/* && \
 	    /usr/bin/mock \
-	      --resultdir $(RESULTDIR)/${os_version} \
+	      --resultdir $(RESULTDIR)/$${os_version} \
 	      --init \
-	      -r epel-${os_version}-x86_64 && \
+	      -r epel-$${os_version}-x86_64 && \
 	    /usr/bin/mock \
-	      --resultdir $(RESULTDIR)/${os_version} \
-	      -r epel-${os_version}-x86_64 \
+	      --resultdir $(RESULTDIR)/$${os_version} \
+	      -r epel-$${os_version}-x86_64 \
 	      --chroot $(ON_PREPARE_CMD) && \
 	    /usr/bin/mock \
-	      --resultdir $(RESULTDIR)/${os_version} \
-	      --define "dist .el${os_version}" \
+	      --resultdir $(RESULTDIR)/$${os_version} \
+	      --define "dist .el$${os_version}" \
 	      --define "VERSION $(VERSION)" \
 	      --define "RELEASE $(RELEASE)" \
 	      --rebuild \
-	      -r epel-${os_version}-x86_64 $(MOCKOPTIONS) \
+	      -r epel-$${os_version}-x86_64 $(MOCKOPTIONS) \
 	      --no-clean \
 	      --no-cleanup-after \
 	      $(SRPMDIR)/*.src.rpm; \
