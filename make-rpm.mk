@@ -66,7 +66,7 @@ srpm: distcwd
 rpms: srpm
 	set -e && for os_version in $(OS_VERSIONS); do \
 	    mkdir -p $(RESULTDIR)/${os_version} && \
-	    rm -rf $(RESULTDIR)/${os_version}* && \
+	    rm -f $(RESULTDIR)/${os_version}/* && \
 	    /usr/bin/mock \
 	      --resultdir $(RESULTDIR)/${os_version} \
 	      --init \
