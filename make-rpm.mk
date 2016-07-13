@@ -65,14 +65,14 @@ srpm: distcwd
 # we use three phases (init, chroot, rebuild) to allow user to modify the chrooted system as needed
 rpms: srpm
 	set -e && for os_version in $(OS_VERSIONS); do \
-	    mkdir -p $(RESULTDIR)/$(os_version) && \
-	    rm -rf $(RESULTDIR)/$(os_version)/* && \
+	    mkdir -p $(RESULTDIR)/${os_version} && \
+	    rm -rf $(RESULTDIR)/${os_version}* && \
 	    /usr/bin/mock \
-	      --resultdir $(RESULTDIR)/$(os_version) \
+	      --resultdir $(RESULTDIR)/${os_version} \
 	      --init \
 	      -r epel-${os_version}-x86_64 && \
 	    /usr/bin/mock \
-	      --resultdir $(RESULTDIR)/$(os_version) \
+	      --resultdir $(RESULTDIR)/${os_version} \
 	      -r epel-${os_version}-x86_64 \
 	      --chroot $(ON_PREPARE_CMD) && \
 	    /usr/bin/mock \
