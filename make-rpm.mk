@@ -64,7 +64,7 @@ srpm: distcwd
 # Build RPMs for all os versions defined on OS_VERIONS
 # we use three phases (init, chroot, rebuild) to allow user to modify the chrooted system as needed
 rpms: srpm
-	$(foreach os_version, $(OS_VERSIONS), \
+	set -e && for os_version in $(OS_VERSIONS); do \
 	    mkdir -p $(RESULTDIR)/$(os_version) && \
 	    rm -rf $(RESULTDIR)/$(os_version)/* && \
 	    /usr/bin/mock \
@@ -85,7 +85,7 @@ rpms: srpm
 	      --no-clean \
 	      --no-cleanup-after \
 	      $(SRPMDIR)/*.src.rpm; \
-	)
+	done
 
 # Upload RPMs for all os versions to Sonatype Nexus
 # Requires package repository-tools
