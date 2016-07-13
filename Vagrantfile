@@ -6,7 +6,7 @@ Vagrant.configure("2") do |config|
 echo "Provisioning"
 cd /vagrant
 
-sudo yum -y mock rpm-build rpmdevtools
+sudo yum -y mock rpm-build rpmdevtools bats
 sudo usermod -a -G mock vagrant
 
 echo "Provisioning done."
