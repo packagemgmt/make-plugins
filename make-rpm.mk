@@ -1,5 +1,15 @@
 # --- Variables ---
-PKGNAME=$(shell basename *.spec .spec)
+PKGNAME:=$(shell test -f *.spec && basename *.spec .spec)
+
+# works only on gnu make >= 4.2 :(
+#ifneq ($(.SHELLSTATUS), 0)
+#    $(error Missing specfile!)
+#endif
+
+ifndef PKGNAME
+    $(error Missing specfile?!)
+endif
+
 
 VERSION_MAJOR ?= 0
 VERSION_MINOR ?= 0
