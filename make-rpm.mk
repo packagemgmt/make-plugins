@@ -70,18 +70,18 @@ rpms: srpm
 	    /usr/bin/mock \
 	      --resultdir $(RESULTDIR)/$(os_version) \
 	      --init \
-	      -r epel-$(os_version)-x86_64 && \
+	      -r epel-${os_version}-x86_64 && \
 	    /usr/bin/mock \
 	      --resultdir $(RESULTDIR)/$(os_version) \
-	      -r epel-$(os_version)-x86_64 \
+	      -r epel-${os_version}-x86_64 \
 	      --chroot $(ON_PREPARE_CMD) && \
 	    /usr/bin/mock \
-	      --resultdir $(RESULTDIR)/$(os_version) \
-	      --define "dist .el$(os_version)" \
+	      --resultdir $(RESULTDIR)/${os_version} \
+	      --define "dist .el${os_version}" \
 	      --define "VERSION $(VERSION)" \
 	      --define "RELEASE $(RELEASE)" \
 	      --rebuild \
-	      -r epel-$(os_version)-x86_64 $(MOCKOPTIONS) \
+	      -r epel-${os_version}-x86_64 $(MOCKOPTIONS) \
 	      --no-clean \
 	      --no-cleanup-after \
 	      $(SRPMDIR)/*.src.rpm; \
