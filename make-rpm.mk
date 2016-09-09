@@ -80,10 +80,10 @@ rpms: srpm
 	    /usr/bin/mock \
 	      --resultdir $(RESULTDIR)/$${os_version} \
 	      --init \
-	      -r epel-$${os_version}-x86_64 && \
+	      -r epel-$${os_version}-x86_64 $(MOCKOPTIONS) && \
 	    /usr/bin/mock \
 	      --resultdir $(RESULTDIR)/$${os_version} \
-	      -r epel-$${os_version}-x86_64 \
+	      -r epel-$${os_version}-x86_64 $(MOCKOPTIONS) \
 	      --chroot $(ON_PREPARE_CMD) && \
 	    /usr/bin/mock \
 	      --resultdir $(RESULTDIR)/$${os_version} \
