@@ -36,6 +36,7 @@ pythonsitedir:=$(DESTDIR)$(shell python -c "from distutils.sysconfig import get_
 SRPMDIR=$(shell rpm --eval '%{_srcrpmdir}')
 OS_VERSIONS?=5 6 7
 RESULTDIR = $(PWD)
+MOCK ?= /usr/bin/mock
 
 ON_PREPARE_CMD ?= echo No prepare cmd. Lucky you.
 
@@ -77,15 +78,15 @@ rpms: srpm
 	set -e && for os_version in $(OS_VERSIONS); do \
 	    mkdir -p $(RESULTDIR)/$${os_version} && \
 	    rm -f $(RESULTDIR)/$${os_version}/* && \
-	    /usr/bin/mock \
+	    $(MOCK) \
 	      --resultdir $(RESULTDIR)/$${os_version} \
 	      --init \
 	      -r epel-$${os_version}-x86_64 $(MOCKOPTIONS) && \
-	    /usr/bin/mock \
+	    $(MOCK) \
 	      --resultdir $(RESULTDIR)/$${os_version} \
 	      -r epel-$${os_version}-x86_64 $(MOCKOPTIONS) \
 	      --chroot $(ON_PREPARE_CMD) && \
-	    /usr/bin/mock \
+	    $(MOCK) \
 	      --resultdir $(RESULTDIR)/$${os_version} \
 	      --define "dist .el$${os_version}" \
 	      --define "VERSION $(VERSION)" \
