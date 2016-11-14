@@ -36,7 +36,7 @@ pythonsitedir:=$(DESTDIR)$(shell python -c "from distutils.sysconfig import get_
 SRPMDIR=$(shell rpm --eval '%{_srcrpmdir}')
 OS_VERSIONS?=5 6 7
 RESULTDIR = $(PWD)
-MOCK ?= /usr/bin/mock
+MOCK ?= $(shell which mock)
 
 ON_PREPARE_CMD ?= echo No prepare cmd. Lucky you.
 
