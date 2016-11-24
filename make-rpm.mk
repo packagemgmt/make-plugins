@@ -40,9 +40,11 @@ MOCK ?= $(shell which mock)
 
 ON_PREPARE_CMD ?= echo No prepare cmd. Lucky you.
 
+# without this, repositorytools >= 4.2.1 would harm the filename so it would miss arch and dist tag
+UPLOAD_EXTRA_PARAMS=--use-direct-put
+
 ifeq ($(RELEASE), SNAPSHOT)
 REPO_SUFFIX=-snapshots
-UPLOAD_EXTRA_PARAMS=--use-direct-put
 else
 REPO_SUFFIX=
 endif
