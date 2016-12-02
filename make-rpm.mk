@@ -20,7 +20,7 @@ VERSION?=$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_BUGFIX)
 GROUP?=com.example# used when uploading to artifact repository
 WORKDIR:=/tmp/
 RELEASE ?= 1
-BUILDARCH=$(shell grep -oP '(?<=^BuildArch: ).*' $(PKGNAME).spec)
+BUILDARCH=$(shell grep -oP '(?<=^BuildArch:\s).*' $(PKGNAME).spec)
 RPMDIR=$(shell rpm --eval %{_rpmdir})
 prefix=$(DESTDIR)$(shell rpm --eval %{_prefix})
 bindir=$(DESTDIR)$(shell rpm --eval %{_bindir})
