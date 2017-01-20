@@ -72,7 +72,7 @@ rpm: distcwd
 srpm: distcwd
 	rpmdev-wipetree
 	# we need to specify old digest algorithm to support el5
-	rpmbuild --define "_source_filedigest_algorithm md5" --define "VERSION $(VERSION)" --define "RELEASE $(RELEASE)" -ts ${WORKDIR}/$(PKGNAME).tgz
+	rpmbuild $(SRPMOPTIONS) --define "_source_filedigest_algorithm md5" --define "VERSION $(VERSION)" --define "RELEASE $(RELEASE)" -ts ${WORKDIR}/$(PKGNAME).tgz
 
 # Build RPMs for all os versions defined on OS_VERIONS
 # we use three phases (init, chroot, rebuild) to allow user to modify the chrooted system as needed
