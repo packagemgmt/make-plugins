@@ -15,7 +15,7 @@ VERSION_MAJOR ?= 0
 VERSION_MINOR ?= 0
 VERSION_BUGFIX ?= 0
 
-# # assign zeros only if not specified from cmdline by make {target} VERSION=1.2.3
+# assign zeros only if not specified from cmdline by make {target} VERSION=1.2.3
 VERSION?=$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_BUGFIX)
 GROUP?=com.example# used when uploading to artifact repository
 WORKDIR:=/tmp/
@@ -43,6 +43,7 @@ ON_PREPARE_CMD ?= echo No prepare cmd. Lucky you.
 # without this, repositorytools >= 4.2.1 would harm the filename so it would miss arch and dist tag
 UPLOAD_EXTRA_PARAMS=--use-direct-put
 
+REPO_PREFIX?=packages-el
 ifeq ($(RELEASE), SNAPSHOT)
 REPO_SUFFIX=-snapshots
 else
@@ -107,7 +108,7 @@ uploadrpms: rpms
 	    artifact upload $(UPLOAD_EXTRA_PARAMS) --artifact $(PKGNAME) --version $(VERSION)-$(RELEASE) \
 	      $(UPLOAD_OPTIONS) \
 	      $(RESULTDIR)/$(os_version)/$(PKGNAME)-$(VERSION)-*$(BUILDARCH).rpm \
-	      packages-el$(os_version)$(REPO_SUFFIX) \
+	      REPO_PREFIX$(os_version)$(REPO_SUFFIX) \
 	      $(GROUP); \
 	)
 
