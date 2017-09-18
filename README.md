@@ -4,7 +4,7 @@ How to incorporate it
 1. Add these lines to your Makefile so you can use this plugin
 ```
 mkplugin:
-        curl -k https://raw.githubusercontent.com/stardust85/make-plugins/master/make-rpm.mk > make-rpm.mk
+        curl https://raw.githubusercontent.com/packagemgmt/make-plugins/master/make-rpm.mk > make-rpm.mk
 
 -include make-rpm.mk
 ```
