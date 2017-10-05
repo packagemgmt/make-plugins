@@ -108,7 +108,7 @@ uploadrpms: rpms
 	    artifact upload $(UPLOAD_EXTRA_PARAMS) --artifact $(PKGNAME) --version $(VERSION)-$(RELEASE) \
 	      $(UPLOAD_OPTIONS) \
 	      $(RESULTDIR)/$(os_version)/$(PKGNAME)-$(VERSION)-*$(BUILDARCH).rpm \
-	      REPO_PREFIX$(os_version)$(REPO_SUFFIX) \
+	      $(REPO_PREFIX)$(os_version)$(REPO_SUFFIX) \
 	      $(GROUP); \
 	)
 
