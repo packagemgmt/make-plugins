@@ -1,5 +1,7 @@
 # --- Variables ---
+ifndef PKGNAME
 PKGNAME:=$(shell test -f *.spec && basename *.spec .spec)
+endif
 
 # works only on gnu make >= 4.2 :(
 #ifneq ($(.SHELLSTATUS), 0)
@@ -73,7 +75,12 @@ rpm: distcwd
 srpm: distcwd
 	rpmdev-wipetree
 	# we need to specify old digest algorithm to support el5
-	rpmbuild $(SRPMOPTIONS) --define "_source_filedigest_algorithm md5" --define "VERSION $(VERSION)" --define "RELEASE $(RELEASE)" -ts ${WORKDIR}/$(PKGNAME).tgz
+	rpmbuild $(SRPMOPTIONS) \
+		--define "_source_filedigest_algorithm md5" \
+		--define "VERSION $(VERSION)" \
+		--define "RELEASE $(RELEASE)" \
+		--define "PACKAGE_NAME $(PKGNAME)" \
+		-ts ${WORKDIR}/$(PKGNAME).tgz
 
 # Build RPMs for all os versions defined on OS_VERIONS
 # we use three phases (init, chroot, rebuild) to allow user to modify the chrooted system as needed
@@ -94,6 +101,7 @@ rpms: srpm
 	      --define "dist .el$${os_version}" \
 	      --define "VERSION $(VERSION)" \
 	      --define "RELEASE $(RELEASE)" \
+	      --define "PACKAGE_NAME $(PKGNAME)" \
 	      --rebuild \
 	      -r epel-$${os_version}-x86_64 $(MOCKOPTIONS) \
 	      --no-clean \
