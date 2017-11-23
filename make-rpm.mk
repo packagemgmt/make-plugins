@@ -73,7 +73,9 @@ rpm: distcwd
 	rpmbuild --define "VERSION $(VERSION)" --define "RELEASE $(RELEASE)" -ta $(WORKDIR)/$(PKGNAME).tgz
 
 srpm: distcwd
+ifndef NOWIPETREE
 	rpmdev-wipetree
+endif
 	# we need to specify old digest algorithm to support el5
 	rpmbuild $(SRPMOPTIONS) \
 		--define "_source_filedigest_algorithm md5" \
