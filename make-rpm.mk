@@ -70,7 +70,10 @@ distcwd:
 
 # Builds RPM package only for your OS version. Much faster than make rpms, good for basic testing of your spec/makefile
 rpm: distcwd
-	rpmbuild --define "VERSION $(VERSION)" --define "RELEASE $(RELEASE)" -ta $(WORKDIR)/$(PKGNAME).tgz
+	rpmbuild -ta $(WORKDIR)/$(PKGNAME).tgz \
+		--define "VERSION $(VERSION)" \
+		--define "RELEASE $(RELEASE)" \
+		--define "PACKAGE_NAME $(PKGNAME)"
 
 srpm: distcwd
 ifndef NOWIPETREE
