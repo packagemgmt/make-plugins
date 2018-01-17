@@ -111,7 +111,8 @@ rpms: srpm
 	      -r epel-$${os_version}-x86_64 $(MOCKOPTIONS) \
 	      --no-clean \
 	      --no-cleanup-after \
-	      $(SRPMDIR)/*.src.rpm; \
+	      $(SRPMDIR)/*.src.rpm || \
+	    false; \
 	done
 
 # Upload RPMs for all os versions to Sonatype Nexus
