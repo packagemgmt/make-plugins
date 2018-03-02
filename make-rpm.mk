@@ -46,14 +46,16 @@ ON_PREPARE_CMD ?= echo No prepare cmd. Lucky you.
 UPLOAD_EXTRA_PARAMS=--use-direct-put
 
 REPO_PREFIX?=packages-el
-ifeq ($(RELEASE), SNAPSHOT)
-REPO_SUFFIX=-snapshots
-else
-REPO_SUFFIX=
-endif
+RELEASE_REPOSITORY?=$(REPO_PREFIX)$(os_version)
+SNAPSHOT_REPOSITORY?=$(REPO_PREFIX)$(os_version)-snapshots
 
-# --- Deprecated variables ---
-DISTTAG?=$(shell rpm --eval '%{dist}' | tr -d '.')
+ifeq ($(RELEASE), SNAPSHOT)
+UPLOAD_REPOSITORY?=$(SNAPSHOT_REPOSITORY)
+UPLOAD_OPTIONS?=$(SNAPSHOT_UPLOAD_OPTIONS)
+else
+UPLOAD_REPOSITORY?=$(RELEASE_REPOSITORY)
+UPLOAD_OPTIONS?=$(RELEASE_UPLOAD_OPTIONS)
+endif
 
 # --- Helper functions ---
 # They are functions so they can be overrided
@@ -122,7 +124,7 @@ uploadrpms: rpms
 	    artifact upload $(UPLOAD_EXTRA_PARAMS) --artifact $(PKGNAME) --version $(VERSION)-$(RELEASE) \
 	      $(UPLOAD_OPTIONS) \
 	      $(RESULTDIR)/$(os_version)/$(PKGNAME)-$(VERSION)-*$(BUILDARCH).rpm \
-	      $(REPO_PREFIX)$(os_version)$(REPO_SUFFIX) \
+	      $(UPLOAD_REPOSITORY) \
 	      $(GROUP); \
 	)
 
@@ -134,15 +136,6 @@ changelog:
 installChangelog:
 	mkdir -p $(defaultdocdir)/$(PKGNAME)-$(VERSION)
 	install -m 644 ChangeLog $(defaultdocdir)/$(PKGNAME)-$(VERSION)
-
-# ----- deprecated targets ---
-# requires repository-tools for uploading to Sonatype Nexus
-define do-upload
-	artifact upload $(UPLOAD_OPTIONS) $(RPMDIR)/$(BUILDARCH)/$(PKGNAME)-$(VERSION)-$(RELEASE).$(BUILDARCH).rpm packages-$(DISTTAG) $(GROUP)
-endef
-
-upload: rpm
-	$(do-upload)
 
 
 .PHONY: distcwd rpm srpm rpms upload uploadrpms changelog installChangelog
