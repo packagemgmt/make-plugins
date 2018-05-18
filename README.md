@@ -13,8 +13,8 @@ mkplugin:
 3. (if you like it) git add mkplugin.mk && git commit mkplugin.mk && git push 
 
 
-Some examples what it can do
-----------------------------
+Some examples of what it can do
+-------------------------------
 
 Create rpm from content in current working directory
 ```
@@ -34,9 +34,9 @@ make rpms
 Upload to artifact repository. This will also build the rpms before.
 (Note: https://pypi.python.org/pypi/repositorytools >=4.2.1 are needed)
 ```
-REPOSITORY_URL=https://repository.eng.mycompany.com
-REPOSITORY_USER=jdoe
-REPOSITORY_PASSWORD=mysecretpassword
+export REPOSITORY_URL=https://repository.eng.mycompany.com
+export REPOSITORY_USER=jdoe
+export REPOSITORY_PASSWORD=mysecretpassword
 
 make uploadrpms GROUP=com.mycompany
 ```
@@ -85,7 +85,7 @@ Upload configuration
 
 You need to install *repositorytools* of version 4.2.1 or higher for upload
 to Nexus repository manager to work. The *repositorytools* can be found at
-https://pypi.python.org/pypi/repositorytools.
+https://pypi.org/project/repositorytools/.
 
 
 ### Connection to the repository manager
@@ -98,9 +98,9 @@ The `REPOSITORY_URL` variable must contain URL to the Nexus service, not
 to a specific repository.
 
 ```
-REPOSITORY_URL=https://repository.eng.mycompany.com
-REPOSITORY_USER=jdoe
-REPOSITORY_PASSWORD=mysecretpassword
+export REPOSITORY_URL=https://repository.eng.mycompany.com
+export REPOSITORY_USER=jdoe
+export REPOSITORY_PASSWORD=mysecretpassword
 
 make uploadrpms GROUP=com.mycompany
 ```
