@@ -1,7 +1,5 @@
 # --- Variables ---
-ifndef PKGNAME
-PKGNAME:=$(shell test -f *.spec && basename *.spec .spec)
-endif
+PKGNAME ?= $(shell test -f *.spec && basename *.spec .spec)
 
 # works only on gnu make >= 4.2 :(
 #ifneq ($(.SHELLSTATUS), 0)
