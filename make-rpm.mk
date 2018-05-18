@@ -20,7 +20,7 @@ VERSION?=$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_BUGFIX)
 GROUP?=com.example# used when uploading to artifact repository
 WORKDIR:=/tmp/
 RELEASE ?= 1
-BUILDARCH=$(shell grep -oP '(?<=^BuildArch:\s).*' $(PKGNAME).spec)
+BUILDARCH=$(shell grep -oP '(?<=^BuildArch:\s).*' $(PKGNAME).spec || rpm --eval %{_arch})
 RPMDIR=$(shell rpm --eval %{_rpmdir})
 prefix=$(DESTDIR)$(shell rpm --eval %{_prefix})
 bindir=$(DESTDIR)$(shell rpm --eval %{_bindir})
@@ -119,7 +119,7 @@ rpms: srpm
 # Requires package repository-tools
 uploadrpms: rpms
 	$(foreach os_version, $(OS_VERSIONS), \
-	    artifact upload $(UPLOAD_EXTRA_PARAMS) --artifact $(PKGNAME) --version $(VERSION)-$(RELEASE) \
+	    artifact upload $(UPLOAD_EXTRA_PARAMS) --artifact $(PKGNAME) --version $(VERSION)-$(RELEASE).el$(os_version).$(BUILDARCH) \
 	      $(UPLOAD_OPTIONS) \
 	      $(RESULTDIR)/$(os_version)/$(PKGNAME)-$(VERSION)-*$(BUILDARCH).rpm \
 	      $(UPLOAD_REPOSITORY) \
