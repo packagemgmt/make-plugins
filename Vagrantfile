@@ -9,6 +9,12 @@ cd /vagrant
 sudo yum -y install mock rpm-build rpmdevtools bats
 sudo usermod -a -G mock vagrant
 
+umask 022
+curl https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py && \
+sudo python /tmp/get-pip.py && \
+pip install repositorytools
+rm -f /tmp/get-pip.py
+
 echo "Provisioning done."
 SCRIPT
 
